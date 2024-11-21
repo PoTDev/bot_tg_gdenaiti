@@ -1,3 +1,5 @@
+import asyncio
+
 from data.permissions import new_user_added
 from aiogram import Router, types, F, Bot
 from os import getenv
@@ -26,11 +28,16 @@ async def mes(message: types.Message):
           builder = InlineKeyboardBuilder()
           builder.row(types.InlineKeyboardButton(
                text="Подписаться на бота", url="tg://resolve?domain=GdenaitiBot"))
-          await message.answer(
+          new_msg = await message.answer(
                fmt.text(fmt.hbold(message.from_user.full_name),
                     fmt.text(", вы находитесь в режиме чтения. "
-                             "Чтобы писать в чате, пожалуйста, подпишитесь на бота, нажав на кнопку ниже"),
+                             "Чтобы писать в чате, пожалуйста, подпишитесь на бота, нажав на кнопку ниже."),
                     sep=""
                ), parse_mode="HTML", reply_markup=builder.as_markup(),
           )
+          await asyncio.sleep(60)
+          try:
+               await new_msg.delete()
+          except Exception as e:
+               pass
 
