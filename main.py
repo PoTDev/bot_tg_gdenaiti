@@ -6,20 +6,13 @@ import aiogram.utils.markdown as fmt
 
 from os import getenv
 from dotenv import load_dotenv
-
-from group_work.new_user import user_router
-
-load_dotenv()
-
-from asyncpg_lite import DatabaseManager
-
-from aiogram import Bot, Dispatcher, html, types
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
+from group_work.user_work import user_router
+from loader import bot
+from aiogram import Dispatcher, types
 from aiogram.filters import CommandStart, Command
-
 from database.models import async_main
 
+load_dotenv()
 # Bot token can be obtained via https://t.me/BotFather
 TOKEN = getenv("BOT_TOKEN")
 print(TOKEN)
@@ -70,7 +63,6 @@ async def help(message: types.Message):
 async def main() -> None:
     await async_main()
     # Initialize Bot instance with default bot properties which will be passed to all API calls
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp.include_routers(user_router)
     # And the run events dispatching
     await dp.start_polling(bot, allowed_updates=["message", "chat_member"])
