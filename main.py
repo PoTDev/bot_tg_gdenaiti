@@ -41,7 +41,7 @@ async def echo(message: types.Message):
             fmt.text("- Вознаграждение передавайте ТОЛЬКО при личной встрече!"),
             fmt.text("- Вознаграждение передавайте ТОЛЬКО при личной встрече!"),
             sep="\n"
-        ), parse_mode="HTML"
+        ), parse_mode="HTML", disable_web_page_preview=True,
     )
 
     await message.answer(
