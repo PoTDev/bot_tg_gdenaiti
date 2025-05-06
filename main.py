@@ -8,7 +8,7 @@ from os import getenv
 from dotenv import load_dotenv
 from group_work.user_work import user_router
 from loader import bot
-from aiogram import Dispatcher, types
+from aiogram import Dispatcher, types, F
 from aiogram.filters import CommandStart, Command
 from database.models import async_main
 
@@ -22,6 +22,8 @@ dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def echo(message: types.Message):
+    user_id = message.from_user.id
+    chat_id = int(getenv("CHAT_ID"))
     await rq.set_user(message.from_user.id,
                       message.from_user.username,
                       message.from_user.first_name,
@@ -43,7 +45,6 @@ async def echo(message: types.Message):
             sep="\n"
         ), parse_mode="HTML", disable_web_page_preview=True,
     )
-
     await message.answer(
         fmt.text(
             fmt.text("Вы успешно подписались! Доступ к чату открыт"),
@@ -56,10 +57,16 @@ async def echo(message: types.Message):
 @dp.message(Command("help"))
 async def help(message: types.Message):
     await message.answer("Раздел в разработке")
+		
 
+@dp.message(F.new_chat_members)
+async def mes_new_user(message: types.Message):
+    await message.delete()
 
-
-
+@dp.message(F.left_chat_member)
+async def mes_left_user(message: types.Message):
+    await message.delete()
+    
 async def main() -> None:
     await async_main()
     # Initialize Bot instance with default bot properties which will be passed to all API calls
