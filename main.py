@@ -11,6 +11,7 @@ from loader import bot
 from aiogram import Dispatcher, types, F
 from aiogram.filters import CommandStart, Command
 from database.models import async_main
+from group_work.support import router as support_router
 
 load_dotenv()
 # Bot token can be obtained via https://t.me/BotFather
@@ -86,6 +87,7 @@ async def main() -> None:
     await async_main()
     # Initialize Bot instance with default bot properties which will be passed to all API calls
     dp.include_routers(user_router)
+    dp.include_routers(support_router)
     # And the run events dispatching
     await dp.start_polling(bot, allowed_updates=["message", "chat_member"])
 
